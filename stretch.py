@@ -1,5 +1,6 @@
 import re
 from parse import parse
+from regex import regex
 
 VIDEO_FPS = 23.967
 SUBS_FPS = 25
@@ -24,7 +25,9 @@ def millis_to_timecode(millis):
 
 # read in the whole file as a string:
 lines = FILE.read()
-sub_lines = re.findall("\d+\n.+ --> .+\n.*\n(?:.*\n)\n", lines.strip())
+sub_lines = regex.findall(pattern="\d+\n.+ --> .+\n(?:.+\n)+\n",
+                          string=lines.strip(),
+                          flags=regex.MULTILINE)
 subs = list(map(
     lambda x: parse("{num:d}\n{start_time} --> {end_time}\n{lines}\n\n", x).named,
     sub_lines))
