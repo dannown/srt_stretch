@@ -5,7 +5,7 @@ from regex import regex
 VIDEO_FPS = 23.967
 SUBS_FPS = 25
 
-FILE = open("/tmp/a.sub", "r")
+FILE = open("/tmp/in.srt", "r")
 
 
 def timecode_to_millis(timecode):
