@@ -36,7 +36,6 @@ def get_encoding(filename):
     filetype = chardet.detect(DETFILE.read())
     DETFILE.close()
     return filetype['encoding']
-    
 
 
 if len(sys.argv) != 2:
