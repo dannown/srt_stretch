@@ -3,6 +3,7 @@ from parse import parse
 from regex import regex
 
 VIDEO_FPS = 23.967
+# VIDEO_FPS = 24.0
 SUBS_FPS = 25
 
 FILE = open("/tmp/in.srt", "r")
