@@ -1,13 +1,15 @@
+#!/usr/bin/env python3
+
 import re
 from parse import parse
 from regex import regex
+import sys
+import shutil
+import chardet
 
 VIDEO_FPS = 23.967
 # VIDEO_FPS = 24.0
 SUBS_FPS = 25
-
-FILE = open("/tmp/in.srt", "r")
-
 
 def timecode_to_millis(timecode):
     (hours,minutes,seconds,milliseconds) = parse("{:d}:{:d}:{:d},{:d}", timecode)
@@ -24,8 +26,29 @@ def millis_to_timecode(millis):
     return "{}:{}:{},{}".format(hours, minutes, seconds, milliseconds)
 
 
+def usage():
+    print ("usage: {} filename".format(sys.argv[0]))
+    exit(0)
+
+
+def get_encoding(filename):
+    DETFILE = open(filename, "rb")
+    filetype = chardet.detect(DETFILE.read())
+    DETFILE.close()
+    return filetype['encoding']
+    
+
+
+if len(sys.argv) != 2:
+    usage()
+filename = sys.argv[1]
+# make a backup
+shutil.copy(filename, filename + ".bak")
+encoding = get_encoding(filename)
+FILE = open(filename, "r", encoding=encoding)
 # read in the whole file as a string:
 lines = FILE.read()
+FILE.close();
 sub_lines = regex.findall(pattern="\d+\n.+ --> .+\n(?:.+\n)+\n",
                           string=lines.strip(),
                           flags=regex.MULTILINE)
@@ -41,6 +64,6 @@ for sub in subs:
                         sub['num'],
                         start_time, end_time,
                         sub['lines'])
-FILE = open("/tmp/out.sub", "w")
+FILE = open(filename, "w")
 FILE.write(good_lines)
 FILE.close()
